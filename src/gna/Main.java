@@ -18,7 +18,7 @@ class Main {
 		if (!initial.isSolvable()) {
 			System.out.println("No solution possible");
 		} else {
-			Solver solver = new Solver(initial, PriorityFunc.HAMMING);
+			Solver solver = new Solver(initial, PriorityFunc.MANHATTAN);
 			for (Board board : solver.solution())
 				System.out.println(board);
 

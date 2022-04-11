@@ -52,6 +52,7 @@ public class Solver {
 			
 			// Add neighbors to PQ
 			for (Board neighbor: min.board.neighbors()) {
+				if (min.previous != null && neighbor.equals(min.previous.board)) continue;
 				int prio = (priority == PriorityFunc.HAMMING) ? min.board.hamming() : min.board.manhattan();
 				PQ.add(new Tuple(neighbor, min.moves + 1, min, prio + min.moves + 1));
 			}

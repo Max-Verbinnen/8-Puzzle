@@ -96,15 +96,16 @@ public class Board {
 		int[][] swappedTiles = swapToLast(0);
 		
 		// Implement formula for determining whether board is solvable
-		int numeratorProduct = 1, denominatorProduct = 1;
-		for (int i = 1; i < tiles.length * 3; i++) {
-			for (int j = i + 1; j < tiles.length * 3; j++) {
-				numeratorProduct *= (position(j, swappedTiles) - position(i, swappedTiles));
-				denominatorProduct *= (j - i);
+		float quotient = 1;
+		for (int i = 1; i < tiles.length * tiles.length; i++) {
+			for (int j = i + 1; j < tiles.length * tiles.length; j++) {
+				float numerator = (position(j, swappedTiles) - position(i, swappedTiles));
+				float denominator = (j - i);
+				quotient *= (numerator / denominator);
 			}
 		}
 		
-		return (float)numeratorProduct / (float)denominatorProduct >= 0;
+		return quotient >= 0;
 	}
 	
 	// Position in linearised matrix starting with 1
