@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
+
 	private int[][] tiles;
 
 	public Board(int[][] tiles) {
@@ -55,16 +56,27 @@ public class Board {
     public int hashCode() {
 		return Arrays.deepHashCode(tiles);
 	}
+    
+    // Returns whether board is in goal state
+    public boolean isGoal() {
+    	for (int i = 0; i < tiles.length; i++) {
+    		for (int j = 0; j < tiles.length; j++) {
+    			if ((i != tiles.length - 1 || j != tiles.length - 1) && tiles[i][j] != i * tiles.length + j + 1) return false;
+    		}
+    	}
+    	
+    	return tiles[tiles.length - 1][tiles.length - 1] == 0;
+    }
 	
 	// Returns a Collection of all neighboring board positions
 	public Collection<Board> neighbors() {
 		List<Board> boards = new ArrayList<Board>();
 		
 		// Find empty space
-		int[] indices = findElement(0);
+		int[] indices = findElement(0, tiles);
 		int i = indices[0];
 		int j = indices[1];
-		
+
 		boards.add(swap(i, j, i + 1, j));
 		boards.add(swap(i, j, i, j + 1));
 		boards.add(swap(i, j, i - 1, j));
@@ -81,13 +93,13 @@ public class Board {
 	// Returns whether board is solvable
 	public boolean isSolvable() {
 		// Move empty tile to end by pushing to right & bottom as far as possible
-		swapToLast(0);
+		int[][] swappedTiles = swapToLast(0);
 		
 		// Implement formula for determining whether board is solvable
 		int numeratorProduct = 1, denominatorProduct = 1;
 		for (int i = 1; i < tiles.length * 3; i++) {
 			for (int j = i + 1; j < tiles.length * 3; j++) {
-				numeratorProduct *= (position(j) - position(i));
+				numeratorProduct *= (position(j, swappedTiles) - position(i, swappedTiles));
 				denominatorProduct *= (j - i);
 			}
 		}
@@ -96,13 +108,13 @@ public class Board {
 	}
 	
 	// Position in linearised matrix starting with 1
-	private int position(int element) {
-		int[] indices = findElement(element);
+	private int position(int element, int[][] tiles) {
+		int[] indices = findElement(element, tiles);
 		return indices[0] * tiles.length + indices[1] + 1;
 	}
 	
 	// Returns position [i, j] of element in tiles
-	private int[] findElement(int element) {
+	private int[] findElement(int element, int[][] tiles) {
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles.length; j++) {
 				if (tiles[i][j] == element) return new int[] {i, j};
@@ -125,8 +137,9 @@ public class Board {
 	}
 	
 	// Swap given element to bottom right
-	private void swapToLast(int element) {
-		int[] indices = findElement(element);
+	private int[][] swapToLast(int element) {
+		int[][] tiles = Arrays.stream(this.tiles).map(el -> el.clone()).toArray($ -> this.tiles.clone());
+		int[] indices = findElement(element, tiles);
 		int i = indices[0];
 		int j = indices[1];
 		
@@ -145,6 +158,8 @@ public class Board {
 				tiles[z][j] = temp;
 			}
 		}
+		
+		return tiles;
 	}
 	
 }

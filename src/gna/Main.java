@@ -4,6 +4,7 @@ import libpract.StdIn;
 import libpract.PriorityFunc;
 
 class Main {
+
 	public static void main(String[] args) {
 		int N = StdIn.readInt();
 		int[][] tiles = new int[N][N];
@@ -24,6 +25,7 @@ class Main {
 			System.out.println("Minimum number of moves = " + Integer.toString(solver.solution().size() - 1));
 		}
 	}
+
 }
 
 
